@@ -1,0 +1,3 @@
+I chose to use the UCB1 Algorithm as: 
+- It is the most common choice for basic bandit problems
+- And is relatively easy to implement.
