@@ -1,0 +1,42 @@
+I asked ChatGPT about what was incorrect for my Part 2:
+
+My Prompt:
+What does it mean to get this error?  Which value is incorrect and which one should I aim to get?
+Test Failed: 1.5752073596631015 != 1.8255111545554437 within 7 places (0.2503037948923421 difference) : Data row 0 of history.tsv has reward not matching action.
+
+ChatGPT Response:
+That error message is really specific:
+
+Test Failed: 1.5752073596631015 != 1.8255111545554437 within 7 places
+Data row 0 of history.tsv has reward not matching action.
+
+What it means
+
+The grader re-ran your code with the same environment and seed.
+
+For the first row in your history.tsv:
+
+Your file has reward = 1.5752073596631015
+
+The grader expected reward = 1.8255111545554437
+
+The actions matched, but the reward value didn’t. That’s why the message says “reward not matching action.”
+
+Why it happens
+
+This usually means:
+
+Mismatch in RNG control:
+You seeded NumPy (or np.random.seed) but forgot to pass a controlled RNG into scipy.stats.beta.rvs or into the bandit. That changes the random sequence, so the bandit yields different rewards than the grader’s reference run.
+
+Mixing RNGs:
+If you use np.random.seed(...) globally and a separate np.random.default_rng, you’ll get different sequences.
+
+Saved the wrong thing:
+You must log the reward you got directly from bandit0.get_reward(action) for each step, not from any estimate or probability list.
+
+Which value is “correct”
+
+The grader’s value (1.8255111545554437) is the one you must aim for.
+
+Your file’s value (1.5752073596631015) is off because the random sequence drifted.
